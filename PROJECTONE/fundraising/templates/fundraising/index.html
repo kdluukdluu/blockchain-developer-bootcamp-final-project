@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block body %}
+    <div class="card">
+    <div class="card-body">
+    <form action="{% url 'projects' %}" method="post">
+    {% csrf_token %}
+        <div class="form-group">
+            <label for="q">Search Project:</label>
+            <select id="q" name="q" >
+            <option style="display:none">
+            {% for cat in categories %}
+                <option value="{{cat.category}}">{{cat.category}}</option>
+            {% endfor %}
+            </select>
+        </div>
+        <input class="btn btn-primary" type="submit" value="Search">
+    </form>
+    
+    </div>
+    </div>
+    
+{% endblock %}

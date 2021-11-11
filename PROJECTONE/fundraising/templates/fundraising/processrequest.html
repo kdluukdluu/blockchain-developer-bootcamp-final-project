@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block body %}
+    <h2>{{ request.project.title }} - Request Number: {{ requestNo }}</h2>
+    {% if message != 'None' %} <h3>{{message}}</h3> {% endif %}
+    <div class="card" style="width: 75rem;">
+    <div class="card-body">
+        
+        {% if request.status == 'Requested' %}
+            <a href="{% url 'vote' id=request.id %}"><button class="btn btn-primary">Vote</button></a>
+        {% endif %}
+
+        <strong>Description: </strong> {{ request.description }} <br />
+		<strong>Completed: </strong> {% if request.status == 'Requested' %}No{% else %}Yes{% endif %}</p>
+        <strong>Value: </strong> {{ request.value}}</p>
+        <strong>Send To: </strong> {{ request.addressTo }}</p>
+        <strong>Number Of Voters: </strong> {{ numberOfVoters }}</p>
+		<strong>Consensus Reached: </strong> {{ consensus }}%</p>
+
+        <br />
+		{% if request.status == 'Requested' and consensus > 50 and user.is_superuser %}
+			<a href="{% url 'makepayment' id=request.id %}"><button class="btn btn-primary">Make Payment</button></a>
+		{% endif %}        
+                
+    </div>
+    </div>
+{% endblock %}

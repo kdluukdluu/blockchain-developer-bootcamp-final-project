@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block body %}
+    {% if message %}
+        <div>{{ message }}</div>
+    {% endif %} 
+    <div class="card">
+    <div class="card-body">
+        <h1 class="postcard__title green">{{ request.project.title }} - Request Number <span id="requestNo">{{ requestNo }}</span></h1>
+		<p id="address" style="display:none;">{{ request.project.address }}</p>
+        
+        <div id="mm-detected"></div>
+    
+        <!-- Connect to MetaMask Wallet -->
+        <button id="mm-connect">Connect to MetaMask</button>
+    
+        <!-- Display current address -->
+        <div id="mm-current-account"></div>
+
+        <!-- Provide an input to change the contract text value -->
+		<a><button id="vote-button" class="btn btn-send" disabled>Yes</button></a>
+        <a href="{% url 'processrequest' id=request.id %}"><button class="btn btn-send">No</button></a>
+
+		<p>Please connect with Metamask to enable the Vote button</p>
+
+        <!-- Read input from contract -->
+        <div>
+            <button id="ss-get-value">Get Number Of Voters</button>
+        </div>
+        <div id="ss-display-value">Current Number Of Voters: </div>
+
+    </div>
+    </div>
+
+    <script type="text/javascript" src="{% static 'js/vote.js' %}"></script>
+
+{% endblock %}

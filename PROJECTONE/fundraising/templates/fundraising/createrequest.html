@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block body %}
+    <h2>Create a Request</h2>
+    {% if message %}
+        <div>{{ message }}</div>
+    {% endif %}
+    <div class="card" style="width: 50rem;">
+    <div class="card-body">
+    <form action="{% url 'createrequest' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+            <input class="form-control" autofocus type="text" name="description" placeholder="Description" required>
+        </div>
+        <div class="form-group">
+            <input class="form-control" autofocus type="text" name="addressTo" placeholder="Address To" required>
+        </div>
+        <div class="form-group">
+            <input class="form-control" autofocus type="number" name="value" placeholder="Value" required>
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="hidden" name="userstamp" value={{user.username}}>
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="hidden" name="projectId" value={{project.id}}>
+        </div>
+        <input class="btn btn-primary" type="submit" value="Submit">
+    </form>
+    </div>
+    </div>
+{% endblock %}
+

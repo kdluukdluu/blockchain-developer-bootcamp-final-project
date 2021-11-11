@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block body %}
+    <h3> {{ project.title }} - Requests</h3>
+    <div class="card">
+        <div class="card-body">
+            {% if user.is_superuser %}
+                <a href="{% url 'createrequest' id=project.id %}"><button class="btn btn-primary">Create Request</button></a>
+            {% endif %}
+            <hr>
+            {% if open_requests or complete_requests %}
+                <h6>Open Requests</h6>
+                <ul>
+                    {% for request in open_requests %}
+                    <a href="{% url 'processrequest' id=request.id %}"><li>{{ request.description|truncatechars:200 }}</li></a>
+                    <hr>
+                    {% endfor %}
+                </ul>
+                <hr>
+                <h6>Completed Requests</h6>
+                <ul>
+                    {% for request in complete_requests %}
+                    <a href="{% url 'processrequest' id=request.id %}"><li>{{ request.description|truncatechars:200 }}</li></a>
+                    <hr>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <h6>There are no requests for this project</h4>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+

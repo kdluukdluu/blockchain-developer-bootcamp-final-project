@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block body %}
+    <h2>My Profile</h2>
+
+    <strong>First Name: </strong>{{first_name}} <br />
+    <strong>Last Name: </strong>{{last_name}} <br />
+    <strong>Email:  </strong>{{email}} <br />
+    <strong>Date Joined: </strong>{{date_joined}} <br />
+    <strong>Account Name: </strong>{{username}} <br />
+    <a href="{% url 'change_password' %}">Change My Password</a> <br />
+    
+{% endblock %}

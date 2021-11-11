@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+    <h2>Register</h2>
+    <div class="card" style="width: 50rem;">
+    {% if message %}
+        <div>{{ message }}</div>
+    {% endif %}
+    <div class="card-body">
+    <form action="{% url 'register' %}" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <input class="form-control" autofocus type="text" name="username" placeholder="Account Name">
+        </div>
+        <div class="form-group">
+            <input class="form-control" autofocus type="text" name="first_name" placeholder="First Name">
+        </div>
+        <div class="form-group">
+            <input class="form-control" autofocus type="text" name="last_name" placeholder="Last Name">
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="email" name="email" placeholder="Email Address">
+        </div>
+        <div class="form-group">
+            <p>I am a:</p>
+            <input type="radio" id="recipient" name="role" value="Recipient">
+            <label for="recipient">Recipient</label>
+            <input type="radio" id="donor" name="role" value="Donor">
+            <label for="donor">Donor</label>
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="password" name="password" placeholder="Password">
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="password" name="confirmation" placeholder="Confirm Password">
+        </div>
+        <input class="btn btn-primary" type="submit" value="Register">
+    </form>
+    </div>
+
+    <p>Already have an account? <a href="{% url 'login' %}">Log In here.</a> </p>
+
+    </div>
+{% endblock %}
