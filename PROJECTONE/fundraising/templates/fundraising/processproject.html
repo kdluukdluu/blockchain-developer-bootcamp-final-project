@@ -23,9 +23,9 @@
 
         {% if project.status == 'Requested' %} 
             {% if role == 'Donor' %}
-                <a href="{% url 'donate' id=project.id %}"><button class="btn btn-primary">Donate</button></p></a>
+                <a href="{% url 'donate' id=project.projectID %}"><button class="btn btn-primary">Donate</button></p></a>
             {% endif %}
-            <a href="{% url 'requests' id=project.id %}"><button class="btn btn-primary">Requests</button></p></a>
+            <a href="{% url 'requests' id=project.projectID %}"><button class="btn btn-primary">Requests</button></p></a>
         {% endif %}
                 
     </div>

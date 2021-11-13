@@ -51,7 +51,7 @@ def createproject(request):
         #print("chain_id=", chain_id)
         #print("my_address=", my_address)
         #print("private_key=", private_key)
-        print("deadline=", deadline)
+        #print("deadline=", deadline)
 
         # Convert deadline from string to datetime format
         dt_deadline = datetime.fromisoformat(deadline)
@@ -61,29 +61,15 @@ def createproject(request):
 
         print("int(deadline)=", int_deadline)
 
-        # Deploy a contract
-        fundraising = web3.eth.contract(abi=abi, bytecode=bytecode)
+        # Call the contract function to create a new project
+        projectID = newProject(int(goal), int_deadline)
 
-        # Pass project's parameters to constructor
-        transaction = fundraising.constructor(
-            int(goal), int_deadline
-        ).buildTransaction(
-            {
-                "chainId": chain_id,
-                "from": my_address,
-                "nonce": web3.eth.getTransactionCount(my_address),
-            }
-        )
+        print("deployedAddress=", deployedAddress)
 
-        signed_tx = web3.eth.account.sign_transaction(
-            transaction, private_key=private_key
-        )
-        tx_hash = web3.eth.send_raw_transaction(signed_tx.rawTransaction)
-        tx_receipt = web3.eth.wait_for_transaction_receipt(tx_hash)
-        contractAddress = tx_receipt.contractAddress
+        print("projectID=", projectID)
 
         # Need to save the new contract address in the DB
-        address = contractAddress
+        address = deployedAddress
 
         # Get requestor's user record
         user_rec  = User.objects.get(username=userstamp)
@@ -104,7 +90,7 @@ def createproject(request):
         #send_mail(subject, message, email_from, recipient_list)
 
         # Save the project in the DB
-        project = Project(status='Requested', firstname=firstname, lastname=lastname, email=requestorEmail, title=title, purpose=purpose, category=category, goal=goal, deadline=deadline, address=address, userstamp=userstamp)
+        project = Project(status='Requested', projectID=projectID, firstname=firstname, lastname=lastname, email=requestorEmail, title=title, purpose=purpose, category=category, goal=goal, deadline=deadline, address=address, userstamp=userstamp)
         project.image.save(image.name, image)
         project.save()
 
@@ -119,6 +105,33 @@ def createproject(request):
             "categories":categories
             })
 
+# Call function createProject in the contract
+def newProject(_goal, _deadline):
+    project_contract = web3.eth.contract(abi=abi, address=deployedAddress)
+        
+    transaction = project_contract.functions.createProject(
+            _goal, _deadline
+        ).buildTransaction(
+            {
+                "chainId": chain_id,
+                "from": my_address,
+                "nonce": web3.eth.getTransactionCount(my_address),
+            }
+        )
+    
+    signed_tx = web3.eth.account.sign_transaction(transaction, private_key=private_key)
+
+    tx_hash = web3.eth.send_raw_transaction(signed_tx.rawTransaction)  
+
+    # Wait for transaction to be mined
+    web3.eth.wait_for_transaction_receipt(tx_hash)
+
+    projectID = getCurrentProjectID()
+
+    print("projectID=", int(projectID))
+
+    return projectID
+
 def unix_time(dt):
     epoch = datetime.utcfromtimestamp(0)
     delta = dt - epoch
@@ -130,18 +143,17 @@ def unix_time_millis(dt):
 # Allow user to make a donation to a given project
 @login_required
 def donate(request, id):
-    project = get_object_or_404(Project, id=id)
-    contractAddress = web3.toChecksumAddress(project.address)
-    print("contractAddress=", contractAddress)
-    context = {"project": project, "contractAddress": contractAddress}
+    project = get_object_or_404(Project, projectID=id)
+    context = {"project": project, 
+               "contractAddress": deployedAddress}
     return render(request, "fundraising/donate.html", context)
 
 # Allow to make a donation or submit a funding request for a given project
 @login_required
 def processproject(request, id):
-    project = get_object_or_404(Project, id=id)
-    raisedAmount = getRaisedAmount(project.address)
-    numberOfDonors = getNumberOfDonors(project.address)
+    project = get_object_or_404(Project, projectID=id)
+    raisedAmount = getRaisedAmount(id)
+    numberOfDonors = getNumberOfDonors(id)
     if request.user.is_superuser:
         role = 'Admin'
     else:
@@ -170,7 +182,7 @@ def projects(request, category='None'):
 # List all requests for a given project
 @login_required
 def requests(request, id):
-    project = get_object_or_404(Project, id=id)
+    project = get_object_or_404(Project, projectID=id)
     open_requests = Request.objects.filter(project=project, status='Requested')
     complete_requests = Request.objects.filter(project=project, status='Completed')
 
@@ -190,23 +202,23 @@ def createrequest(request, id=0):
         value       = request.POST["value"]
         addressTo   = request.POST["addressTo"]
         userstamp   = request.POST["userstamp"]
-        projectId   = request.POST["projectId"]
-        project = get_object_or_404(Project, id=projectId)
+        projectID   = request.POST["projectID"]
+        project = get_object_or_404(Project, projectID=projectID)
 
          # Get requestor's user record
         user_rec  = User.objects.get(username=userstamp)
         requestorEmail = user_rec.email
 
         # Call the contract for this specific project and create a request
-        newRequest(project.address, description, addressTo, int(value))
+        requestID = newRequest(int(projectID), description, addressTo, int(value))
 
         # Save the request in the DB
-        request = Request(status='Requested', description=description, value=value, addressTo=addressTo, project=project, requestorEmail=requestorEmail, userstamp=userstamp)
+        request = Request(status='Requested', requestID=requestID, description=description, value=value, addressTo=addressTo, project=project, requestorEmail=requestorEmail, userstamp=userstamp)
         request.save()
 
-        return redirect(f"/projects/{projectId}/requests")
+        return redirect(f"/projects/{projectID}/requests")
 
-    project = get_object_or_404(Project, id=id)
+    project = get_object_or_404(Project, projectID=id)
     context = {
         "project": project,
     }
@@ -214,11 +226,11 @@ def createrequest(request, id=0):
     return render(request, "fundraising/createrequest.html", context)
 
 # Call function createRequest in the contract
-def newRequest(_address, _description, _recipient, _value):
-        project_contract = web3.eth.contract(abi=abi, address=_address)
+def newRequest(_projectID, _description, _recipient, _value):
+    project_contract = web3.eth.contract(abi=abi, address=deployedAddress)
         
-        transaction = project_contract.functions.createRequest(
-            _description, _recipient, _value
+    transaction = project_contract.functions.createRequest(
+        _projectID, _description, _recipient, _value
         ).buildTransaction(
             {
                 "chainId": chain_id,
@@ -226,33 +238,39 @@ def newRequest(_address, _description, _recipient, _value):
                 "nonce": web3.eth.getTransactionCount(my_address),
             }
         )
-        signed_tx = web3.eth.account.sign_transaction(
-            transaction, private_key=private_key
-        )
-        web3.eth.send_raw_transaction(signed_tx.rawTransaction)    
+
+    signed_tx = web3.eth.account.sign_transaction(transaction, private_key=private_key)
+
+    tx_hash = web3.eth.send_raw_transaction(signed_tx.rawTransaction)  
+
+    # Wait for transaction to be mined
+    web3.eth.wait_for_transaction_receipt(tx_hash)
+
+    requestID = getCurrentRequestID()
+
+    print("requestID=", int(requestID))
+
+    return requestID  
       
 # Process request page - Allow user to Vote or Make Payment for a given request.
 @login_required
 def processrequest(request, id):
 
-    req = get_object_or_404(Request, id=id)
-    address = req.project.address
-    requestNo = req.getRequestNo()
-    numberOfVoters = getNumberOfVoters(address, requestNo)
-    numberOfDonors = getNumberOfDonors(address)
+    req = get_object_or_404(Request, requestID=id)
+    projectID = req.project.projectID
+    numberOfVoters = getNumberOfVoters(id)
+    numberOfDonors = getNumberOfDonors(projectID)
 
     # Calculate consensus for this request
     if numberOfDonors == 0:
         consensus = 0
     else:
-        consensus = float((numberOfVoters / numberOfDonors)) * 100
-
-    requestNo = req.getRequestNo()
+        consensus = float((float(numberOfVoters) / float(numberOfDonors))) * 100
 
     context = {
         "request": req,
         "numberOfVoters": numberOfVoters,
-        "requestNo": requestNo,
+        "requestNo": id,
         "consensus": consensus,
     }
 
@@ -261,7 +279,7 @@ def processrequest(request, id):
 # Page for completing a request - action from the back end since only superuser can call this function
 @login_required
 def makepayment(request, id):
-    req = get_object_or_404(Request, id=id)
+    req = get_object_or_404(Request, requestID=id)
     req.sendPayment()
     req.status = 'Completed'
     req.save()
@@ -271,12 +289,11 @@ def makepayment(request, id):
 # Vote page - actions are built in the front end with web3.js
 @login_required
 def vote(request, id):
-    req = get_object_or_404(Request, id=id)
-    requestNo = req.getRequestNo()
+    req = get_object_or_404(Request, requestID=id)
 
     context = {
         "request": req,
-        "requestNo": requestNo,
+        "requestNo": id,
     }
 
     return render(request, "fundraising/vote.html", context)

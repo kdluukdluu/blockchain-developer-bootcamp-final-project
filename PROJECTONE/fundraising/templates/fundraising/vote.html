@@ -21,7 +21,7 @@
 
         <!-- Provide an input to change the contract text value -->
 		<a><button id="vote-button" class="btn btn-send" disabled>Yes</button></a>
-        <a href="{% url 'processrequest' id=request.id %}"><button class="btn btn-send">No</button></a>
+        <a href="{% url 'processrequest' id=request.requestID %}"><button class="btn btn-send">No</button></a>
 
 		<p>Please connect with Metamask to enable the Vote button</p>
 

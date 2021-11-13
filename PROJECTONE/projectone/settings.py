@@ -127,13 +127,25 @@ EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 
 
-# Blockchain settings
-PROVIDER = 'HTTP://127.0.0.1:8545'
-CHAIN_ID = 1337
+# Ganache local settings
+# PROVIDER = 'HTTP://127.0.0.1:8545'
+# CHAIN_ID = 1337
 
-# public and prviate key for admin
-MY_PUBLIC_KEY = "0x9594524836ef22c2589Ee681868E65721d275670"
-MY_PRIVATE_KEY = "37c2b2d45268c1b29db562961cd30f153d40310041af31afc6751dbf3461e89f"
+# Ganache public and prviate key for admin
+# MY_PUBLIC_KEY = "0x9594524836ef22c2589Ee681868E65721d275670"
+# MY_PRIVATE_KEY = "37c2b2d45268c1b29db562961cd30f153d40310041af31afc6751dbf3461e89f"
+
+
+# Infura Connection
+PROVIDER = 'https://ropsten.infura.io/v3/e28b60c6fcca4458a32e761de9df9f55'
+CHAIN_ID = 3
+
+# Ropsten Account
+MY_PUBLIC_KEY = "0x268c93a5e332Fe54d909B351BE7AA391AacaB094"
+MY_PRIVATE_KEY = "9ff4249d579847ea70afbe328cacffa00c433ec314dab7196f4f167df51f04be"
+
+# Deployed Contract Address in Ropsten Network
+DEPLOYED_ADDRESS = "0xA23C24e3209FA07f07d6f56E07d94e1f15AC86c2"
 
 
 # Static files (CSS, JavaScript, Images)

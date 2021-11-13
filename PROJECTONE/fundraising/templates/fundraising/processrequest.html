@@ -9,7 +9,7 @@
     <div class="card-body">
         
         {% if request.status == 'Requested' %}
-            <a href="{% url 'vote' id=request.id %}"><button class="btn btn-primary">Vote</button></a>
+            <a href="{% url 'vote' id=request.requestID %}"><button class="btn btn-primary">Vote</button></a>
         {% endif %}
 
         <strong>Description: </strong> {{ request.description }} <br />
@@ -21,7 +21,7 @@
 
         <br />
 		{% if request.status == 'Requested' and consensus > 50 and user.is_superuser %}
-			<a href="{% url 'makepayment' id=request.id %}"><button class="btn btn-primary">Make Payment</button></a>
+			<a href="{% url 'makepayment' id=request.requestID %}"><button class="btn btn-primary">Make Payment</button></a>
 		{% endif %}        
                 
     </div>

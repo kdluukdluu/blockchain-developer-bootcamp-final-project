@@ -20,7 +20,7 @@
                 {% endif %}
 
                 <div class="card-body">
-                <h5 class="card-title"><a href={% url 'processproject' id=project.id %}>{{project.title}}</a></h5> 
+                <h5 class="card-title"><a href={% url 'processproject' id=project.projectID %}>{{project.title}}</a></h5> 
 
                 <p class="card-text">Purpose: {{project.purpose|truncatechars:62}}</p>
                 <p class="card-text">Deadline: {{ project.deadline}}</p>

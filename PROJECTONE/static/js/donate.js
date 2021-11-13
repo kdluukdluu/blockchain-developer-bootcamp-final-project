@@ -2,24 +2,44 @@
 const ssABI =
 [
 	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_goal",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_deadline",
-				"type": "uint256"
-			}
-		],
+		"inputs": [],
 		"stateMutability": "nonpayable",
 		"type": "constructor"
 	},
 	{
 		"anonymous": false,
 		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "_projectID",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "_goal",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "_deadline",
+				"type": "uint256"
+			}
+		],
+		"name": "CreateProjectEvent",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "_projectID",
+				"type": "uint256"
+			},
 			{
 				"indexed": false,
 				"internalType": "string",
@@ -45,6 +65,12 @@ const ssABI =
 	{
 		"anonymous": false,
 		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "_projectID",
+				"type": "uint256"
+			},
 			{
 				"indexed": false,
 				"internalType": "address",
@@ -81,20 +107,36 @@ const ssABI =
 		"type": "event"
 	},
 	{
-		"inputs": [],
-		"name": "admin",
-		"outputs": [
+		"inputs": [
 			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
+				"internalType": "uint256",
+				"name": "_goal",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_deadline",
+				"type": "uint256"
 			}
 		],
-		"stateMutability": "view",
+		"name": "createProject",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "projectID",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
 		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_projectID",
+				"type": "uint256"
+			},
 			{
 				"internalType": "string",
 				"name": "_description",
@@ -112,47 +154,27 @@ const ssABI =
 			}
 		],
 		"name": "createRequest",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "deadline",
 		"outputs": [
 			{
 				"internalType": "uint256",
-				"name": "",
+				"name": "requestID",
 				"type": "uint256"
 			}
 		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "donate",
-		"outputs": [],
-		"stateMutability": "payable",
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
 		"inputs": [
 			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"name": "donors",
-		"outputs": [
-			{
 				"internalType": "uint256",
-				"name": "",
+				"name": "projectID",
 				"type": "uint256"
 			}
 		],
-		"stateMutability": "view",
+		"name": "donate",
+		"outputs": [],
+		"stateMutability": "payable",
 		"type": "function"
 	},
 	{
@@ -170,8 +192,65 @@ const ssABI =
 	},
 	{
 		"inputs": [],
-		"name": "getRaisedAmount",
+		"name": "getCurrentProjectID",
 		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getCurrentRequestID",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_projectID",
+				"type": "uint256"
+			}
+		],
+		"name": "getProjectInfo",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			},
 			{
 				"internalType": "uint256",
 				"name": "",
@@ -192,6 +271,11 @@ const ssABI =
 		"name": "getRequestInfo",
 		"outputs": [
 			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			},
+			{
 				"internalType": "string",
 				"name": "",
 				"type": "string"
@@ -211,19 +295,6 @@ const ssABI =
 				"name": "",
 				"type": "string"
 			},
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "goal",
-		"outputs": [
 			{
 				"internalType": "uint256",
 				"name": "",
@@ -248,20 +319,7 @@ const ssABI =
 	},
 	{
 		"inputs": [],
-		"name": "minDonation",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "numberOfDonors",
+		"name": "numProjects",
 		"outputs": [
 			{
 				"internalType": "uint256",
@@ -286,19 +344,6 @@ const ssABI =
 		"type": "function"
 	},
 	{
-		"inputs": [],
-		"name": "raisedAmount",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
 		"inputs": [
 			{
 				"internalType": "uint256",
@@ -308,6 +353,11 @@ const ssABI =
 		],
 		"name": "requests",
 		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "projectID",
+				"type": "uint256"
+			},
 			{
 				"internalType": "string",
 				"name": "description",
@@ -338,6 +388,19 @@ const ssABI =
 		"type": "function"
 	},
 	{
+		"inputs": [],
+		"name": "sysadm",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
 		"inputs": [
 			{
 				"internalType": "uint256",
@@ -362,6 +425,8 @@ const ssABI =
 window.addEventListener('load', function() {
   
   let ssAddress =  document.getElementById("address").textContent;
+
+  let projectID =  document.getElementById("projectID").textContent;
 
   console.log('ssAddress=', ssAddress)
 
@@ -421,6 +486,12 @@ ssSubmit.onclick = async () => {
 
   console.log('ssAddress=', ssAddress)
 
+  projectID =  document.getElementById("projectID").textContent;
+
+  projectID = parseInt(projectID);
+
+  console.log('projectID=', projectID)
+
   var web3 = new Web3(window.ethereum)
 
   // instantiate smart contract instance
@@ -430,7 +501,7 @@ ssSubmit.onclick = async () => {
   //await fundraising.methods.donate(ethereum.selectedAddress, ssInputValue).send({from: ethereum.selectedAddress})
 
   // calling contribute method from the contract with parameters picked from the front end
-  await fundraising.methods.donate().send({from:ethereum.selectedAddress, value:ssInputValue}).then(function (result) {
+  await fundraising.methods.donate(projectID).send({from:ethereum.selectedAddress, value:ssInputValue}).then(function (result) {
 		console.log(result);
 		window.alert("Your transaction hash: " + result.transactionHash + "\nFor more info copy and paste it on Etherscan!");
 	})
@@ -446,16 +517,24 @@ ssGetValue.onclick = async () => {
 
   ssAddress =  document.getElementById("address").textContent;
 
+  console.log('ssAddress=', ssAddress)
+  
+  projectID =  document.getElementById("projectID").textContent;
+
+  projectID = parseInt(projectID);
+
+  console.log('projectID=', projectID)
+
   const fundraising = new web3.eth.Contract(ssABI, ssAddress)
   fundraising.setProvider(window.ethereum)
 
-  var value = await fundraising.methods.getRaisedAmount().call()
+  var value = await fundraising.methods.getProjectInfo(projectID).call()
 
-  console.log('RaisedAmount=', value)
+  console.log('RaisedAmount=', value[5])
 
   const ssDisplayValue = document.getElementById('ss-display-value')
 
-  ssDisplayValue.innerHTML = 'Current Raised Amount Value: ' + value
+  ssDisplayValue.innerHTML = 'Current Raised Amount Value: ' + value[5]
 
 }
 
