@@ -7,11 +7,12 @@ The smart contract is built to accomplish the following functionalities:
 3) Allow users with 'Admin' role to complete the spending requests if donors have reached consensus.
 
 # ProjectOne Directories
-PROJECTONE (Project Folder)
+```
+PROJECTONE 
 > brownie  
     > contracts - location of the smart contract file fundraising.sol
     > tests - location of the test script file test_fundraising.py
-> fundraising (Dapp Folder)
+> fundraising 
     > contracts - location of the smart contract code fundraising.sol
     > migrations - contains new migrations files based on the changes specified in models.py
     > templates
@@ -32,6 +33,7 @@ PROJECTONE (Project Folder)
         vote.js - front end script to interact with web3.js, vote.html form, MetaMask and the deployed contract.
 > template: location of the UI forms HTML files that belong at the project level.
     base.html - first level ProjectOne page including ProjectOne logo and nagivation bar items.
+```
 
 ### Setting up the environment
 1) Downloaded the source code from Github.
