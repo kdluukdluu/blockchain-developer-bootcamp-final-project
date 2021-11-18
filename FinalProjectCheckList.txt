@@ -1,4 +1,4 @@
-https://github.com/kdluukdluu/blockchain-developer-bootcamp-final-project/tree/main/PROJECTONE 
+https://github.com/kdluukdluu/blockchain-developer-bootcamp-final-project 
 
 Please answer the following questions. Does your project:
 
