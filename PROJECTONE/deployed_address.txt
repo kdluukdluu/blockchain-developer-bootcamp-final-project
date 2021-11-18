@@ -1,2 +1,0 @@
-Contract has been deployed to Ropsten Network
-0xA23C24e3209FA07f07d6f56E07d94e1f15AC86c2
