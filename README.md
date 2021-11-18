@@ -1,5 +1,5 @@
 # ProjectOne
-Welcome to ProjectOne! An Ethereum Dapp that allows the donors to help out the underserved communities thru fundraising projects.  It is written in Django, Solidity, Web3.js and Web3.py.
+Welcome to ProjectOne! An Ethereum Dapp that allows the donors to help out the underserved communities through fundraising projects.  It is written in Django, Solidity, Web3.js and Web3.py.
 
 The smart contract is built to accomplish the following functionalities:
 1) Allow users with 'Admin' role to create new fundraising projects and funding distribution requests.
